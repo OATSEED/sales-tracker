@@ -75,6 +75,24 @@
     box-shadow:3px 3px 0 var(--ink);}
   .gear-btn:hover{background:var(--red);color:#fff;transform:translate(1px,1px);box-shadow:2px 2px 0 var(--ink);}
 
+  /* ===== Tab bar (separate pages) ===== */
+  .tab-bar{display:flex;gap:8px;margin-bottom:20px;}
+  .tab-btn{
+    flex:1;padding:12px 10px;border:3px solid var(--ink);border-radius:10px;background:var(--paper);
+    color:var(--ink);font-family:'Kanit';font-weight:800;font-size:13px;cursor:pointer;
+    text-transform:uppercase;letter-spacing:.02em;box-shadow:3px 3px 0 var(--ink);transition:.12s;
+  }
+  .tab-btn:nth-child(1).active{background:var(--sage);color:#fff;}
+  .tab-btn:nth-child(2).active{background:var(--gold);color:var(--ink);}
+  .tab-btn:nth-child(3).active{background:var(--red);color:#fff;}
+  .tab-btn:not(.active):hover{transform:translate(1px,1px);box-shadow:2px 2px 0 var(--ink);}
+  .tab-btn.active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--ink);}
+  .page{animation:pageIn .18s ease;}
+  @keyframes pageIn{ from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);} }
+  @media (max-width:520px){
+    .tab-btn{font-size:11px;padding:11px 4px;}
+  }
+
   /* ===== Receipt hero ===== */
   .receipt{
     background:var(--card-bg);
@@ -366,43 +384,78 @@
 
   <div id="mainContent" style="display:none;">
 
-    <div class="receipt">
-      <div class="receipt-topline">
-        <div>
-          <div class="receipt-title">ใบสรุปยอด</div>
-          <div class="receipt-sub" id="periodLabel">— กำลังโหลด —</div>
-        </div>
-        <div>
-          <div class="period-toggle">
-            <button id="periodModeMonth" class="active" onclick="setPeriodMode('month')">รายเดือน</button>
-            <button id="periodModeRange" onclick="setPeriodMode('range')">กำหนดเอง</button>
-          </div>
-          <select class="month-select" id="monthFilter"></select>
-          <div class="range-inputs" id="rangeInputs" style="display:none;">
-            <input type="date" id="rangeStart">
-            <span style="color:#a39d88;font-size:12px;">ถึง</span>
-            <input type="date" id="rangeEnd">
-          </div>
-        </div>
-      </div>
-      <div class="receipt-row"><span>รายรับ</span><span class="val income" id="sumIncome">฿0</span></div>
-      <div class="receipt-row"><span>รายจ่าย</span><span class="val expense" id="sumExpense">฿0</span></div>
-      <div class="receipt-row"><span>กำไรขั้นต้นจากสินค้า</span><span class="val" id="sumProfit" style="color:var(--gold);">฿0</span></div>
-      <div class="receipt-row total"><span>คงเหลือสุทธิ</span><span class="val" id="sumNet">฿0</span></div>
-
-      <div class="goal-wrap" id="goalWrap" style="display:none;">
-        <div class="goal-top">
-          <span>เป้าหมายยอดขายเดือนนี้</span>
-          <span id="goalText">฿0 / ฿0</span>
-        </div>
-        <div class="goal-bar-track"><div class="goal-bar-fill" id="goalBarFill" style="width:0%;"></div></div>
-        <div class="goal-badge" id="goalBadge" style="display:none;"></div>
-      </div>
-      <button class="goal-set-link" id="goalSetLink" onclick="promptGoal()">ตั้ง/แก้เป้าหมายยอดขายรายเดือน</button>
+    <div class="tab-bar" id="tabBar">
+      <button class="tab-btn active" data-tab="dashboard" onclick="switchPage('dashboard')">📊 สรุป</button>
+      <button class="tab-btn" data-tab="add" onclick="switchPage('add')">➕ บันทึก</button>
+      <button class="tab-btn" data-tab="ledger" onclick="switchPage('ledger')">📋 รายการ</button>
     </div>
 
-    <div class="grid">
-      <div class="card">
+    <div class="page" id="page-dashboard">
+
+      <div class="receipt">
+        <div class="receipt-topline">
+          <div>
+            <div class="receipt-title">ใบสรุปยอด</div>
+            <div class="receipt-sub" id="periodLabel">— กำลังโหลด —</div>
+          </div>
+          <div>
+            <div class="period-toggle">
+              <button id="periodModeMonth" class="active" onclick="setPeriodMode('month')">รายเดือน</button>
+              <button id="periodModeRange" onclick="setPeriodMode('range')">กำหนดเอง</button>
+            </div>
+            <select class="month-select" id="monthFilter"></select>
+            <div class="range-inputs" id="rangeInputs" style="display:none;">
+              <input type="date" id="rangeStart">
+              <span style="color:#a39d88;font-size:12px;">ถึง</span>
+              <input type="date" id="rangeEnd">
+            </div>
+          </div>
+        </div>
+        <div class="receipt-row"><span>รายรับ</span><span class="val income" id="sumIncome">฿0</span></div>
+        <div class="receipt-row"><span>รายจ่าย</span><span class="val expense" id="sumExpense">฿0</span></div>
+        <div class="receipt-row"><span>กำไรขั้นต้นจากสินค้า</span><span class="val" id="sumProfit" style="color:var(--gold);">฿0</span></div>
+        <div class="receipt-row total"><span>คงเหลือสุทธิ</span><span class="val" id="sumNet">฿0</span></div>
+
+        <div class="goal-wrap" id="goalWrap" style="display:none;">
+          <div class="goal-top">
+            <span>เป้าหมายยอดขายเดือนนี้</span>
+            <span id="goalText">฿0 / ฿0</span>
+          </div>
+          <div class="goal-bar-track"><div class="goal-bar-fill" id="goalBarFill" style="width:0%;"></div></div>
+          <div class="goal-badge" id="goalBadge" style="display:none;"></div>
+        </div>
+        <button class="goal-set-link" id="goalSetLink" onclick="promptGoal()">ตั้ง/แก้เป้าหมายยอดขายรายเดือน</button>
+      </div>
+
+      <div class="card" style="margin-bottom:24px;">
+        <h3>สัดส่วนตามหมวดหมู่ <span class="eyebrow">BREAKDOWN</span></h3>
+        <canvas id="catChart" height="220"></canvas>
+        <div class="chart-empty" id="catChartEmpty" style="display:none;">ยังไม่มีข้อมูลในเดือนนี้</div>
+      </div>
+
+      <div class="card" style="margin-bottom:24px;">
+        <h3>แนวโน้มรายวัน <span class="eyebrow">TREND</span></h3>
+        <canvas id="trendChart" height="90"></canvas>
+        <div class="chart-empty" id="trendChartEmpty" style="display:none;">ยังไม่มีข้อมูลในเดือนนี้</div>
+      </div>
+
+      <div class="grid">
+        <div class="card">
+          <h3>อันดับสินค้า/หมวดหมู่ขายดี <span class="eyebrow">TOP RANKING</span></h3>
+          <div id="rankingList"></div>
+          <div class="chart-empty" id="rankingEmpty" style="display:none;">ยังไม่มีข้อมูลรายรับในเดือนนี้</div>
+        </div>
+        <div class="card">
+          <h3>เปรียบเทียบยอดรายเดือน <span class="eyebrow">MONTH VS MONTH</span></h3>
+          <div id="compareList"></div>
+          <div class="chart-empty" id="compareEmpty" style="display:none;">มีข้อมูลไม่พอสำหรับเปรียบเทียบ</div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="page" id="page-add" style="display:none;">
+      <div class="card" style="max-width:520px;margin:0 auto;">
         <h3 id="formTitle">บันทึกรายการ <span class="eyebrow">NEW ENTRY</span></h3>
         <div class="edit-banner" id="editBanner" style="display:none;">
           <span>กำลังแก้ไขรายการ</span>
@@ -438,56 +491,33 @@
         <button class="submit-btn" id="submitBtn" onclick="addTransaction()">+ บันทึกรายการ</button>
         <div class="status-msg" id="formStatus"></div>
       </div>
-
-      <div class="card">
-        <h3>สัดส่วนตามหมวดหมู่ <span class="eyebrow">BREAKDOWN</span></h3>
-        <canvas id="catChart" height="220"></canvas>
-        <div class="chart-empty" id="catChartEmpty" style="display:none;">ยังไม่มีข้อมูลในเดือนนี้</div>
-      </div>
     </div>
 
-    <div class="card" style="margin-bottom:24px;">
-      <h3>แนวโน้มรายวัน <span class="eyebrow">TREND</span></h3>
-      <canvas id="trendChart" height="90"></canvas>
-      <div class="chart-empty" id="trendChartEmpty" style="display:none;">ยังไม่มีข้อมูลในเดือนนี้</div>
-    </div>
-
-    <div class="grid">
-      <div class="card">
-        <h3>อันดับสินค้า/หมวดหมู่ขายดี <span class="eyebrow">TOP RANKING</span></h3>
-        <div id="rankingList"></div>
-        <div class="chart-empty" id="rankingEmpty" style="display:none;">ยังไม่มีข้อมูลรายรับในเดือนนี้</div>
-      </div>
-      <div class="card">
-        <h3>เปรียบเทียบยอดรายเดือน <span class="eyebrow">MONTH VS MONTH</span></h3>
-        <div id="compareList"></div>
-        <div class="chart-empty" id="compareEmpty" style="display:none;">มีข้อมูลไม่พอสำหรับเปรียบเทียบ</div>
-      </div>
-    </div>
-
-    <div class="ledger-wrap">
-      <div class="ledger-header">
-        <h3 style="font-family:'Kanit',serif;font-weight:600;color:var(--ink);">รายการทั้งหมด</h3>
-        <div style="display:flex;gap:8px;">
-          <button class="export-btn" onclick="exportToExcel()">⬇ Export</button>
-          <button class="gear-btn" onclick="loadData()" title="รีเฟรช" style="width:34px;height:34px;">↻</button>
+    <div class="page" id="page-ledger" style="display:none;">
+      <div class="ledger-wrap">
+        <div class="ledger-header">
+          <h3 style="font-family:'Kanit',serif;font-weight:600;color:var(--ink);">รายการทั้งหมด</h3>
+          <div style="display:flex;gap:8px;">
+            <button class="export-btn" onclick="exportToExcel()">⬇ Export</button>
+            <button class="gear-btn" onclick="loadData()" title="รีเฟรช" style="width:34px;height:34px;">↻</button>
+          </div>
         </div>
+        <div class="ledger-tools">
+          <input type="text" id="searchBox" placeholder="ค้นหาหมวดหมู่ หรือ รายละเอียด..." oninput="render()">
+          <select id="typeFilter" onchange="render()">
+            <option value="all">ทุกประเภท</option>
+            <option value="income">รายรับ</option>
+            <option value="expense">รายจ่าย</option>
+          </select>
+        </div>
+        <table>
+          <thead>
+            <tr><th>วันที่</th><th>หมวดหมู่</th><th>รายละเอียด</th><th style="text-align:right;">จำนวนเงิน</th><th style="text-align:right;">กำไร</th><th></th></tr>
+          </thead>
+          <tbody id="ledgerBody"></tbody>
+        </table>
+        <div class="empty-state" id="ledgerEmpty" style="display:none;">ยังไม่มีรายการในเดือนนี้</div>
       </div>
-      <div class="ledger-tools">
-        <input type="text" id="searchBox" placeholder="ค้นหาหมวดหมู่ หรือ รายละเอียด..." oninput="render()">
-        <select id="typeFilter" onchange="render()">
-          <option value="all">ทุกประเภท</option>
-          <option value="income">รายรับ</option>
-          <option value="expense">รายจ่าย</option>
-        </select>
-      </div>
-      <table>
-        <thead>
-          <tr><th>วันที่</th><th>หมวดหมู่</th><th>รายละเอียด</th><th style="text-align:right;">จำนวนเงิน</th><th style="text-align:right;">กำไร</th><th></th></tr>
-        </thead>
-        <tbody id="ledgerBody"></tbody>
-      </table>
-      <div class="empty-state" id="ledgerEmpty" style="display:none;">ยังไม่มีรายการในเดือนนี้</div>
     </div>
 
   </div>
@@ -675,6 +705,18 @@ async function saveUrl(){
   }
 }
 document.getElementById('settingsBtn').onclick = openSettings;
+
+function switchPage(name){
+  ['dashboard','add','ledger'].forEach(p=>{
+    document.getElementById('page-'+p).style.display = (p===name) ? 'block' : 'none';
+  });
+  document.querySelectorAll('.tab-btn').forEach(b=>{
+    b.classList.toggle('active', b.dataset.tab===name);
+  });
+  if(name==='add' && editingRowIndex===null){
+    document.getElementById('fDate').value = document.getElementById('fDate').value || new Date().toISOString().slice(0,10);
+  }
+}
 
 function setType(t){
   currentType = t;
@@ -893,7 +935,8 @@ function editRow(rowIndex){
   document.getElementById('formTitle').innerHTML = 'แก้ไขรายการ <span class="eyebrow">EDITING</span>';
   document.getElementById('submitBtn').textContent = '✓ บันทึกการแก้ไข';
   document.getElementById('formStatus').className = 'status-msg';
-  document.querySelector('.card').scrollIntoView({behavior:'smooth', block:'start'});
+  switchPage('add');
+  document.getElementById('page-add').scrollIntoView({behavior:'smooth', block:'start'});
 }
 
 function cancelEdit(){
