@@ -108,27 +108,36 @@
 
   /* ===== Mobile refinements ===== */
   @media (max-width:640px){
+    :root{ --shadow: 3px 3px 0 #111111; }
+    html[data-theme="dark"]{ --shadow: 3px 3px 0 #FFD400; }
     .wrap{padding:16px 12px 48px;}
     .brand-name{font-size:17px;}
-    .brand-mark{width:30px;height:30px;font-size:15px;}
-    .gear-btn{width:34px;height:34px;font-size:15px;}
-    .topbar-actions{gap:6px;}
-    .card{padding:16px;}
+    .brand-mark{width:32px;height:32px;font-size:15px;box-shadow:2px 2px 0 var(--ink);}
+    .gear-btn{width:38px;height:38px;font-size:16px;box-shadow:2px 2px 0 var(--ink);border-width:2px;}
+    .topbar-actions{gap:7px;}
+    .card{padding:16px;border-width:2.5px;}
     .card h3{font-size:14.5px;margin-bottom:12px;}
-    .receipt{padding:20px 18px 16px;}
+    .card h3 .eyebrow{font-size:9px;padding:2px 6px;}
+    .receipt{padding:20px 18px 16px;border-width:2.5px;}
     .receipt-topline{flex-direction:column;align-items:stretch;}
     .receipt-row{font-size:13px;}
     .receipt-row.total{font-size:19px;}
     .receipt-row span:first-child{max-width:62%;}
     .period-toggle{width:100%;}
-    .period-toggle button{flex:1;}
-    .month-select{width:100%;}
+    .period-toggle button{flex:1;padding:7px 10px;}
+    .month-select{width:100%;padding:7px 12px;}
     .range-inputs{width:100%;}
-    .range-inputs input{flex:1;min-width:0;}
-    .modal{padding:18px;}
+    .range-inputs input{flex:1;min-width:0;padding:7px 10px;}
+    .modal{padding:18px;border-width:2.5px;box-shadow:4px 4px 0 var(--ink);}
     .row2{grid-template-columns:1fr;gap:0;}
+    .submit-btn{box-shadow:3px 3px 0 var(--ink);padding:13px 11px;}
+    .btn-save{box-shadow:2px 2px 0 var(--ink);}
+    .export-btn{box-shadow:2px 2px 0 var(--ink);padding:8px 12px;}
+    .empty-hero{padding:44px 18px;border-width:2.5px;}
+    .empty-hero button{box-shadow:3px 3px 0 var(--ink);}
     .ledger-header{flex-wrap:wrap;gap:10px;}
     .ledger-header h3{font-size:15px;}
+    .edit-btn, .del-btn{font-size:17px;padding:6px 8px;}
     .invoice-row{grid-template-columns:1fr 1fr;grid-template-areas:"name name" "qty price" "remove remove";row-gap:6px;}
     .invoice-row input:first-child{grid-area:name;}
     .invoice-row input:nth-child(2){grid-area:qty;}
@@ -141,9 +150,10 @@
     table, thead, tbody, tr, td{display:block;width:100%;}
     thead{position:absolute;left:-9999px;top:-9999px;}
     tbody tr{
-      border-bottom:1px solid var(--line);
-      padding:12px 16px;
+      border-bottom:2px solid var(--ink);
+      padding:14px 16px;
     }
+    tbody tr:last-child{border-bottom:none;}
     tbody td{
       display:flex;
       justify-content:space-between;
@@ -156,10 +166,11 @@
     tbody td::before{
       content:attr(data-label);
       font-size:10.5px;
-      font-weight:600;
+      font-weight:700;
       letter-spacing:.04em;
       text-transform:uppercase;
-      color:#a39d88;
+      color:var(--ink-soft);
+      opacity:.55;
       flex-shrink:0;
     }
     tbody td:last-child{justify-content:flex-end;}
