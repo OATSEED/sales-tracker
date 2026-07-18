@@ -156,7 +156,35 @@
   #lockScreen{position:fixed;inset:0;background:var(--paper);z-index:100;display:none;flex-direction:column;
     align-items:center;justify-content:center;padding:24px;}
 
-  /* ===== Placeholder ("coming soon") pages ===== */
+  /* ===== Products ===== */
+  .product-card{background:var(--card-bg);border:3px solid var(--ink);border-radius:10px;padding:14px 16px;margin-bottom:12px;box-shadow:3px 3px 0 var(--ink);}
+  .product-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:8px;}
+  .product-name{font-family:'Kanit';font-weight:800;font-size:15px;color:var(--charcoal);}
+  .product-stock-badge{font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;border:2px solid var(--ink);white-space:nowrap;}
+  .product-stock-badge.ok{background:var(--sage);color:#fff;}
+  .product-stock-badge.low{background:var(--gold);color:var(--ink);}
+  .product-stock-badge.out{background:var(--red);color:#fff;}
+  .product-meta{display:flex;gap:16px;font-size:12px;color:var(--ink-soft);opacity:.75;margin-bottom:10px;flex-wrap:wrap;}
+  .product-meta b{color:var(--charcoal);opacity:1;font-weight:700;}
+  .product-actions{display:flex;gap:8px;}
+  .product-actions button{flex:1;padding:8px;border:2.5px solid var(--ink);border-radius:8px;font-family:'Kanit';font-weight:700;font-size:12.5px;cursor:pointer;}
+  .btn-sell{background:var(--sage);color:#fff;box-shadow:2px 2px 0 var(--ink);}
+  .btn-edit-product{background:var(--gold);color:var(--ink);}
+  .btn-del-product{background:var(--paper-2);color:var(--red);flex:0 0 44px;}
+  .products-toolbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;gap:10px;}
+  .low-stock-banner{background:var(--gold);border:2.5px solid var(--ink);border-radius:10px;padding:10px 14px;margin-bottom:16px;
+    font-size:12.5px;font-weight:700;color:var(--ink);}
+  .sell-qty-stepper{display:flex;align-items:center;gap:12px;justify-content:center;margin:14px 0;}
+  .sell-qty-stepper button{width:40px;height:40px;border-radius:8px;border:2.5px solid var(--ink);background:var(--paper);
+    font-family:'Kanit';font-weight:800;font-size:20px;cursor:pointer;box-shadow:2px 2px 0 var(--ink);}
+  .sell-qty-stepper input{width:64px;text-align:center;padding:9px 4px;border:2.5px solid var(--ink);border-radius:8px;font-family:'Kanit';font-weight:700;font-size:16px;}
+  .sell-total{text-align:center;font-family:'Kanit';font-weight:800;font-size:18px;color:var(--ink);margin-bottom:16px;}
+
+  /* ===== Reports page ===== */
+  #reportRefDay, #reportRefWeek, #reportRefMonth, #reportRefYear{
+    width:100%;padding:9px 11px;border:2.5px solid var(--ink);border-radius:7px;
+    font-family:'Kanit';font-size:14px;background:var(--paper);color:var(--charcoal);
+  }
   .placeholder-card{text-align:center;padding:50px 22px;}
   .placeholder-card .ph-icon{font-size:44px;margin-bottom:10px;}
   .placeholder-card h3{justify-content:center;}
@@ -680,28 +708,89 @@
     </div>
 
     <div class="page" id="page-products" style="display:none;">
-      <div class="card placeholder-card">
-        <div class="ph-icon">📦</div>
-        <h3>จัดการสินค้า</h3>
-        <p>
-          หน้านี้กำลังจะมาในเฟสถัดไป จะรองรับ: เพิ่ม/แก้ไข/ลบสินค้า, กำหนดราคาขาย-ต้นทุน,
-          จำนวนคงเหลือ, แจ้งเตือนสินค้าใกล้หมด และคำนวณกำไรอัตโนมัติเมื่อขาย
-          — เชื่อมกับ Google Sheet ชีทใหม่ชื่อ "Products" (คอลัมน์: ProductID, ชื่อสินค้า, ราคาขาย, ต้นทุน, คงเหลือ, จุดแจ้งเตือน)
-        </p>
-        <div class="ph-badge">เฟส 3 · กำลังพัฒนา</div>
+      <div class="products-toolbar">
+        <h3 style="margin:0;font-family:'Kanit';font-weight:800;text-transform:uppercase;color:var(--ink);">รายการสินค้า</h3>
+        <button class="submit-btn" style="width:auto;padding:9px 16px;margin:0;" onclick="openProductModal()">+ เพิ่มสินค้า</button>
       </div>
+      <div id="lowStockBanner" class="low-stock-banner" style="display:none;"></div>
+      <div id="productList"></div>
+      <div class="chart-empty" id="productListEmpty" style="display:none;">ยังไม่มีสินค้า กด "+ เพิ่มสินค้า" เพื่อเริ่มต้น</div>
     </div>
 
     <div class="page" id="page-reports" style="display:none;">
-      <div class="card placeholder-card">
-        <div class="ph-icon">📊</div>
-        <h3>รายงาน</h3>
-        <p>
-          หน้านี้กำลังจะมาในเฟสถัดไป จะรองรับ: รายงานรายวัน/สัปดาห์/เดือน/ปี, กราฟยอดขายและหมวดหมู่ค่าใช้จ่าย,
-          Export PDF/Excel และแชร์รายงาน (ตอนนี้ใช้ปุ่ม Export ในแท็บ "รายการ" ไปพลางก่อนได้ครับ)
-        </p>
-        <div class="ph-badge">เฟส 4 · กำลังพัฒนา</div>
+
+      <div class="card" style="margin-bottom:20px;">
+        <h3>เลือกช่วงรายงาน <span class="eyebrow">REPORT PERIOD</span></h3>
+        <div class="period-toggle" style="margin-bottom:12px;flex-wrap:wrap;">
+          <button id="reportTypeDay" class="active" onclick="setReportType('day')">รายวัน</button>
+          <button id="reportTypeWeek" onclick="setReportType('week')">รายสัปดาห์</button>
+          <button id="reportTypeMonth" onclick="setReportType('month')">รายเดือน</button>
+          <button id="reportTypeYear" onclick="setReportType('year')">รายปี</button>
+        </div>
+        <input type="date" id="reportRefDay" onchange="renderReport()">
+        <input type="week" id="reportRefWeek" style="display:none;" onchange="renderReport()">
+        <input type="month" id="reportRefMonth" style="display:none;" onchange="renderReport()">
+        <input type="number" id="reportRefYear" style="display:none;" onchange="renderReport()">
+        <div style="font-size:12px;color:var(--ink-soft);opacity:.65;margin-top:8px;font-weight:600;" id="reportRangeLabel"></div>
       </div>
+
+      <div class="receipt" style="margin-bottom:20px;">
+        <div class="receipt-title">สรุปยอด</div>
+        <div class="receipt-sub" id="reportPeriodLabel">—</div>
+        <div class="receipt-row"><span>รายรับ</span><span class="val income" id="repIncome">฿0</span></div>
+        <div class="receipt-row"><span>รายจ่าย</span><span class="val expense" id="repExpense">฿0</span></div>
+        <div class="receipt-row"><span>กำไรขั้นต้นจากสินค้า</span><span class="val" id="repProfit" style="color:var(--gold);">฿0</span></div>
+        <div class="receipt-row total"><span>คงเหลือสุทธิ</span><span class="val" id="repNet">฿0</span></div>
+        <div class="stat-grid" style="margin-top:14px;margin-bottom:0;">
+          <div class="mini-stat" style="grid-column:span 1;background:var(--sage);">
+            <div class="stat-label" style="color:#fff;opacity:.85;">ออเดอร์</div>
+            <div class="stat-value" style="color:#fff;" id="repOrderCount">0</div>
+          </div>
+          <div class="mini-stat" style="background:var(--red);">
+            <div class="stat-label" style="color:#fff;opacity:.85;">ชิ้นที่ขาย</div>
+            <div class="stat-value" style="color:#fff;" id="repItemsSold">0</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-bottom:20px;">
+        <h3>กราฟยอดขาย <span class="eyebrow">SALES</span></h3>
+        <canvas id="reportSalesChart" height="140"></canvas>
+        <div class="chart-empty" id="reportSalesEmpty" style="display:none;">ยังไม่มีข้อมูลในช่วงนี้</div>
+      </div>
+
+      <div class="card" style="margin-bottom:20px;">
+        <h3>กราฟรายรับ-รายจ่าย <span class="eyebrow">INCOME VS EXPENSE</span></h3>
+        <canvas id="reportIEChart" height="140"></canvas>
+        <div class="chart-empty" id="reportIEEmpty" style="display:none;">ยังไม่มีข้อมูลในช่วงนี้</div>
+      </div>
+
+      <div class="card" style="margin-bottom:20px;">
+        <h3>กราฟหมวดหมู่ค่าใช้จ่าย <span class="eyebrow">EXPENSE BREAKDOWN</span></h3>
+        <canvas id="reportCatChart" height="220"></canvas>
+        <div class="chart-empty" id="reportCatEmpty" style="display:none;">ยังไม่มีรายจ่ายในช่วงนี้</div>
+      </div>
+
+      <div class="card">
+        <h3>ส่งออก & แชร์ <span class="eyebrow">EXPORT</span></h3>
+        <div class="settings-item">
+          <div><div class="s-label">Export PDF</div><div class="s-sub">สรุปรายงานเป็นไฟล์ PDF</div></div>
+          <button onclick="exportReportPdf()">ดาวน์โหลด</button>
+        </div>
+        <div class="settings-item">
+          <div><div class="s-label">Export Excel</div><div class="s-sub">รายการทั้งหมดในช่วงนี้เป็น .xlsx</div></div>
+          <button onclick="exportReportExcel()">ดาวน์โหลด</button>
+        </div>
+        <div class="settings-item">
+          <div><div class="s-label">Export CSV</div><div class="s-sub">รายการทั้งหมดในช่วงนี้เป็น .csv</div></div>
+          <button onclick="exportReportCsv()">ดาวน์โหลด</button>
+        </div>
+        <div class="settings-item">
+          <div><div class="s-label">แชร์รายงาน</div><div class="s-sub">แชร์สรุปยอดแบบข้อความ</div></div>
+          <button onclick="shareReport()">แชร์</button>
+        </div>
+      </div>
+
     </div>
 
     <div class="page" id="page-settings" style="display:none;">
@@ -751,7 +840,9 @@
       <div class="card placeholder-card" style="padding:26px 22px;">
         <p style="margin:0;">
           เฟส 1: โครงแอปใหม่ + Dashboard ✅<br>
-          กำลังจะมา: จัดการสินค้า (เฟส 3), รายงานเต็มรูปแบบ (เฟส 4), หมวดหมู่กำหนดเอง, เปลี่ยนภาษา
+          เฟส 2: รายการ + แนบสลิป ✅<br>
+          เฟส 3: จัดการสินค้า ✅<br>
+          กำลังจะมา: รายงานเต็มรูปแบบ (เฟส 4), หมวดหมู่กำหนดเอง, เปลี่ยนภาษา
         </p>
       </div>
     </div>
@@ -824,9 +915,68 @@
   </div>
 </div>
 
+<div class="modal-bg" id="productModalBg">
+  <div class="modal">
+    <h3 id="productModalTitle">เพิ่มสินค้า</h3>
+    <p>กำหนดราคาขาย ต้นทุน และจำนวนคงเหลือของสินค้า</p>
+    <div class="field">
+      <label>ชื่อสินค้า</label>
+      <input type="text" id="pName" placeholder="เช่น เสื้อยืดลาย A">
+    </div>
+    <div class="row2">
+      <div class="field">
+        <label>ราคาขาย (บาท/ชิ้น)</label>
+        <input type="number" id="pSellPrice" step="0.01" min="0" placeholder="0.00">
+      </div>
+      <div class="field">
+        <label>ต้นทุน (บาท/ชิ้น)</label>
+        <input type="number" id="pCost" step="0.01" min="0" placeholder="0.00">
+      </div>
+    </div>
+    <div class="row2">
+      <div class="field">
+        <label>จำนวนคงเหลือ</label>
+        <input type="number" id="pStock" step="1" min="0" placeholder="0">
+      </div>
+      <div class="field">
+        <label>แจ้งเตือนเมื่อเหลือน้อยกว่า</label>
+        <input type="number" id="pLowStock" step="1" min="0" placeholder="เช่น 5">
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeProductModal()">ยกเลิก</button>
+      <button class="btn-save" onclick="saveProduct()">บันทึก</button>
+    </div>
+    <div class="status-msg" id="productModalStatus"></div>
+  </div>
+</div>
+
+<div class="modal-bg" id="sellModalBg">
+  <div class="modal">
+    <h3>บันทึกการขาย</h3>
+    <p id="sellProductName" style="font-weight:700;color:var(--ink);opacity:1;font-size:14px;"></p>
+    <div class="sell-qty-stepper">
+      <button onclick="adjustSellQty(-1)">−</button>
+      <input type="number" id="sellQty" value="1" min="1" oninput="updateSellTotal()">
+      <button onclick="adjustSellQty(1)">+</button>
+    </div>
+    <div class="sell-total" id="sellTotalText">รวม ฿0</div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeSellModal()">ยกเลิก</button>
+      <button class="btn-save" onclick="confirmSell()">✓ บันทึกการขาย</button>
+    </div>
+    <div class="status-msg" id="sellModalStatus"></div>
+  </div>
+</div>
+
 <script>
 let WEBAPP_URL = null;
 let allData = [];
+let allProducts = [];
+let editingProductRow = null;
+let sellingProduct = null;
+let reportPeriodType = 'day';
+let reportSalesChartInst, reportIEChartInst, reportCatChartInst;
 let currentType = 'income';
 let catChart, trendChart;
 let editingRowIndex = null;
@@ -938,6 +1088,11 @@ async function initApp(){
   const today = new Date().toISOString().slice(0,10);
   document.getElementById('rangeStart').value = today;
   document.getElementById('rangeEnd').value = today;
+
+  document.getElementById('reportRefDay').value = today;
+  document.getElementById('reportRefWeek').value = getISOWeekString(today);
+  document.getElementById('reportRefMonth').value = today.slice(0,7);
+  document.getElementById('reportRefYear').value = today.slice(0,4);
 
   addInvoiceRow();
 
@@ -1225,6 +1380,12 @@ function switchPage(name){
   if(name==='ledger'){
     renderLedger();
   }
+  if(name==='products'){
+    renderProducts();
+  }
+  if(name==='reports'){
+    renderReport();
+  }
 }
 
 function setType(t){
@@ -1257,8 +1418,13 @@ async function loadData(){
       category:r.category, description:r.description, amount:Number(r.amount), cost:Number(r.cost||0), qty:Number(r.qty||1),
       receiptUrl:r.receiptUrl||''
     })).filter(r=>r.date && r.date!=='undefined');
+    allProducts = (json.products || []).map(p=>({
+      rowIndex:p.rowIndex, name:p.name, sellPrice:Number(p.sellPrice||0), cost:Number(p.cost||0),
+      stock:Number(p.stock||0), lowStockThreshold:Number(p.lowStockThreshold||0)
+    }));
     populateMonthFilter();
     render();
+    renderProducts();
   }catch(e){
     ledgerBody.innerHTML = '<tr><td colspan="7" style="padding:20px 22px;color:var(--red);">โหลดข้อมูลไม่สำเร็จ: '+e.message+'</td></tr>';
   }
@@ -1420,6 +1586,310 @@ function renderHistoryChart(){
   });
 }
 
+/* ===== Reports (รายงาน) ===== */
+function getISOWeekString(dateStr){
+  const d = new Date(dateStr+'T00:00:00');
+  d.setHours(0,0,0,0);
+  d.setDate(d.getDate() + 3 - ((d.getDay()+6)%7));
+  const week1 = new Date(d.getFullYear(),0,4);
+  const weekNum = 1 + Math.round(((d - week1) / 86400000 - 3 + ((week1.getDay()+6)%7)) / 7);
+  return d.getFullYear() + '-W' + String(weekNum).padStart(2,'0');
+}
+function isoWeekToRange(weekStr){
+  const [yearStr, wStr] = weekStr.split('-W');
+  const year = parseInt(yearStr), week = parseInt(wStr);
+  const jan4 = new Date(year,0,4);
+  const jan4Day = (jan4.getDay()+6)%7;
+  const monday = new Date(jan4); monday.setDate(jan4.getDate() - jan4Day + (week-1)*7);
+  const sunday = new Date(monday); sunday.setDate(monday.getDate()+6);
+  return { start: monday.toISOString().slice(0,10), end: sunday.toISOString().slice(0,10) };
+}
+
+function setReportType(type){
+  reportPeriodType = type;
+  ['Day','Week','Month','Year'].forEach(t=>{
+    document.getElementById('reportType'+t).classList.toggle('active', t.toLowerCase()===type);
+  });
+  document.getElementById('reportRefDay').style.display = type==='day' ? 'block':'none';
+  document.getElementById('reportRefWeek').style.display = type==='week' ? 'block':'none';
+  document.getElementById('reportRefMonth').style.display = type==='month' ? 'block':'none';
+  document.getElementById('reportRefYear').style.display = type==='year' ? 'block':'none';
+  renderReport();
+}
+
+function computeReportRange(){
+  if(reportPeriodType==='day'){
+    const v = document.getElementById('reportRefDay').value || new Date().toISOString().slice(0,10);
+    return { start:v, end:v };
+  }
+  if(reportPeriodType==='week'){
+    const v = document.getElementById('reportRefWeek').value;
+    if(!v) return null;
+    return isoWeekToRange(v);
+  }
+  if(reportPeriodType==='month'){
+    const v = document.getElementById('reportRefMonth').value;
+    if(!v) return null;
+    const [y,m] = v.split('-').map(Number);
+    const lastDay = new Date(y,m,0).getDate();
+    return { start: v+'-01', end: v+'-'+String(lastDay).padStart(2,'0') };
+  }
+  if(reportPeriodType==='year'){
+    const v = document.getElementById('reportRefYear').value || new Date().getFullYear();
+    return { start: v+'-01-01', end: v+'-12-31' };
+  }
+  return null;
+}
+
+function computeReportBuckets(range){
+  if(reportPeriodType==='year'){
+    const y = range.start.slice(0,4);
+    return Array.from({length:12},(_,i)=>{
+      const mo = String(i+1).padStart(2,'0');
+      return { label: mo+'/'+y.slice(2), key: y+'-'+mo, granularity:'month' };
+    });
+  }
+  const buckets = [];
+  let cur = new Date(range.start+'T00:00:00');
+  const endD = new Date(range.end+'T00:00:00');
+  while(cur <= endD){
+    const key = cur.toISOString().slice(0,10);
+    const parts = key.split('-');
+    buckets.push({ label: parts[2]+'/'+parts[1], key, granularity:'day' });
+    cur.setDate(cur.getDate()+1);
+  }
+  return buckets;
+}
+
+function renderReport(){
+  const range = computeReportRange();
+  if(!range) return;
+  const rows = allData.filter(r=>r.date>=range.start && r.date<=range.end);
+
+  document.getElementById('reportRangeLabel').textContent = `ช่วง: ${range.start} ถึง ${range.end}`;
+  document.getElementById('reportPeriodLabel').textContent = `${range.start} — ${range.end}`.toUpperCase();
+
+  const incomeRows = rows.filter(r=>r.type==='income');
+  const income = incomeRows.reduce((s,r)=>s+r.amount,0);
+  const expense = rows.filter(r=>r.type==='expense').reduce((s,r)=>s+r.amount,0);
+  const grossProfit = incomeRows.reduce((s,r)=>s+(r.amount-(r.cost||0)),0);
+
+  document.getElementById('repIncome').textContent = baht(income);
+  document.getElementById('repExpense').textContent = baht(expense);
+  document.getElementById('repProfit').textContent = baht(grossProfit);
+  document.getElementById('repNet').textContent = baht(income-expense);
+  document.getElementById('repOrderCount').textContent = incomeRows.length;
+  document.getElementById('repItemsSold').textContent = incomeRows.reduce((s,r)=>s+(r.qty||1),0);
+
+  const buckets = computeReportBuckets(range);
+  const aggregated = buckets.map(b=>{
+    const matches = rows.filter(r => b.granularity==='month' ? r.date.slice(0,7)===b.key : r.date===b.key);
+    const inc = matches.filter(r=>r.type==='income').reduce((s,r)=>s+r.amount,0);
+    const exp = matches.filter(r=>r.type==='expense').reduce((s,r)=>s+r.amount,0);
+    return { label:b.label, income:inc, expense:exp };
+  });
+
+  renderReportSalesChart(aggregated);
+  renderReportIEChart(aggregated);
+  renderReportCatChart(rows);
+}
+
+function renderReportSalesChart(aggregated){
+  const canvas = document.getElementById('reportSalesChart');
+  const emptyEl = document.getElementById('reportSalesEmpty');
+  const total = aggregated.reduce((s,b)=>s+b.income,0);
+  if(!total){
+    canvas.style.display='none'; emptyEl.style.display='block';
+    if(reportSalesChartInst) reportSalesChartInst.destroy();
+    return;
+  }
+  canvas.style.display='block'; emptyEl.style.display='none';
+  if(reportSalesChartInst) reportSalesChartInst.destroy();
+  reportSalesChartInst = new Chart(canvas, {
+    type:'bar',
+    data:{ labels:aggregated.map(b=>b.label), datasets:[{ label:'ยอดขาย', data:aggregated.map(b=>b.income),
+      backgroundColor:'#00AEEF', borderColor:'#111111', borderWidth:2, borderRadius:4 }] },
+    options:{
+      plugins:{ legend:{ display:false } },
+      scales:{
+        x:{ ticks:{ font:{family:"'Kanit'", size:aggregated.length>15?8:11}, color:'#111111' }, grid:{ display:false } },
+        y:{ ticks:{ font:{family:"'Kanit'", size:10}, color:'#111111' }, grid:{ color:'#FFE9A3' } }
+      }
+    }
+  });
+}
+
+function renderReportIEChart(aggregated){
+  const canvas = document.getElementById('reportIEChart');
+  const emptyEl = document.getElementById('reportIEEmpty');
+  const total = aggregated.reduce((s,b)=>s+b.income+b.expense,0);
+  if(!total){
+    canvas.style.display='none'; emptyEl.style.display='block';
+    if(reportIEChartInst) reportIEChartInst.destroy();
+    return;
+  }
+  canvas.style.display='block'; emptyEl.style.display='none';
+  if(reportIEChartInst) reportIEChartInst.destroy();
+  reportIEChartInst = new Chart(canvas, {
+    type:'bar',
+    data:{
+      labels:aggregated.map(b=>b.label),
+      datasets:[
+        { label:'รายรับ', data:aggregated.map(b=>b.income), backgroundColor:'#00AEEF', borderColor:'#111111', borderWidth:2, borderRadius:4 },
+        { label:'รายจ่าย', data:aggregated.map(b=>b.expense), backgroundColor:'#FF2E63', borderColor:'#111111', borderWidth:2, borderRadius:4 }
+      ]
+    },
+    options:{
+      plugins:{ legend:{ position:'bottom', labels:{ font:{family:"'Kanit'", size:12}, color:'#111111' } } },
+      scales:{
+        x:{ ticks:{ font:{family:"'Kanit'", size:aggregated.length>15?8:11}, color:'#111111' }, grid:{ display:false } },
+        y:{ ticks:{ font:{family:"'Kanit'", size:10}, color:'#111111' }, grid:{ color:'#FFE9A3' } }
+      }
+    }
+  });
+}
+
+function renderReportCatChart(rows){
+  const canvas = document.getElementById('reportCatChart');
+  const emptyEl = document.getElementById('reportCatEmpty');
+  const byCat = {};
+  rows.filter(r=>r.type==='expense').forEach(r=>{
+    byCat[r.category||'อื่นๆ'] = (byCat[r.category||'อื่นๆ']||0) + r.amount;
+  });
+  const labels = Object.keys(byCat);
+  if(!labels.length){
+    canvas.style.display='none'; emptyEl.style.display='block';
+    if(reportCatChartInst) reportCatChartInst.destroy();
+    return;
+  }
+  canvas.style.display='block'; emptyEl.style.display='none';
+  const palette = ['#FF2E63','#00AEEF','#FFD400','#111111','#7ED957','#B983FF','#FF7A00'];
+  if(reportCatChartInst) reportCatChartInst.destroy();
+  reportCatChartInst = new Chart(canvas, {
+    type:'doughnut',
+    data:{ labels, datasets:[{ data:Object.values(byCat), backgroundColor:palette, borderWidth:2, borderColor:'#111111' }] },
+    options:{
+      plugins:{ legend:{ position:'bottom', labels:{ font:{family:"'Kanit'", size:12}, padding:14, color:'#111111' } } },
+      cutout:'62%'
+    }
+  });
+}
+
+function exportReportPdf(){
+  const range = computeReportRange();
+  if(!range){ alert('เลือกช่วงเวลาก่อน'); return; }
+  const rows = allData.filter(r=>r.date>=range.start && r.date<=range.end);
+  const incomeRows = rows.filter(r=>r.type==='income');
+  const income = incomeRows.reduce((s,r)=>s+r.amount,0);
+  const expense = rows.filter(r=>r.type==='expense').reduce((s,r)=>s+r.amount,0);
+  const grossProfit = incomeRows.reduce((s,r)=>s+(r.amount-(r.cost||0)),0);
+  const shopName = localStorage.getItem('shop_name') || 'ร้านค้า';
+
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+  doc.setFontSize(16);
+  doc.text(shopName, 14, 18);
+  doc.setFontSize(12);
+  doc.text('รายงานสรุปยอด', 14, 26);
+  doc.setFontSize(9);
+  doc.text(`ช่วงเวลา: ${range.start} ถึง ${range.end}`, 14, 33);
+
+  let y = 45;
+  doc.setFontSize(10);
+  const lines = [
+    ['รายรับ', income.toLocaleString('th-TH') + ' บาท'],
+    ['รายจ่าย', expense.toLocaleString('th-TH') + ' บาท'],
+    ['กำไรขั้นต้นจากสินค้า', grossProfit.toLocaleString('th-TH') + ' บาท'],
+    ['คงเหลือสุทธิ', (income-expense).toLocaleString('th-TH') + ' บาท'],
+    ['จำนวนออเดอร์', String(incomeRows.length)],
+    ['จำนวนชิ้นที่ขาย', String(incomeRows.reduce((s,r)=>s+(r.qty||1),0))]
+  ];
+  lines.forEach(([label,val])=>{
+    doc.text(label, 14, y);
+    doc.text(val, 140, y);
+    y += 8;
+  });
+
+  y += 4;
+  doc.setFontSize(11);
+  doc.text('รายจ่ายตามหมวดหมู่', 14, y);
+  y += 7;
+  doc.setFontSize(9);
+  const byCat = {};
+  rows.filter(r=>r.type==='expense').forEach(r=>{ byCat[r.category||'อื่นๆ'] = (byCat[r.category||'อื่นๆ']||0)+r.amount; });
+  const catEntries = Object.entries(byCat).sort((a,b)=>b[1]-a[1]);
+  if(!catEntries.length){
+    doc.text('— ไม่มีรายจ่ายในช่วงนี้ —', 14, y);
+  } else {
+    catEntries.forEach(([cat,amt])=>{
+      doc.text(cat, 14, y);
+      doc.text(amt.toLocaleString('th-TH') + ' บาท', 140, y);
+      y += 7;
+    });
+  }
+
+  doc.save(`report-${reportPeriodType}-${range.start}_${range.end}.pdf`);
+}
+
+function exportReportExcel(){
+  const range = computeReportRange();
+  if(!range){ alert('เลือกช่วงเวลาก่อน'); return; }
+  const rows = allData.filter(r=>r.date>=range.start && r.date<=range.end).sort((a,b)=>a.date.localeCompare(b.date));
+  if(!rows.length){ alert('ไม่มีข้อมูลในช่วงเวลานี้'); return; }
+  const sheetData = rows.map(r=>({
+    'วันที่': r.date, 'ประเภท': r.type==='income'?'รายรับ':'รายจ่าย', 'หมวดหมู่': r.category,
+    'รายละเอียด': r.description, 'จำนวนเงิน': r.amount, 'ต้นทุน': r.cost||0, 'จำนวนชิ้น': r.qty||1
+  }));
+  const ws = XLSX.utils.json_to_sheet(sheetData);
+  ws['!cols'] = [{wch:12},{wch:10},{wch:20},{wch:32},{wch:14},{wch:10},{wch:10}];
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, 'Report');
+  XLSX.writeFile(wb, `report-${reportPeriodType}-${range.start}_${range.end}.xlsx`);
+}
+
+function exportReportCsv(){
+  const range = computeReportRange();
+  if(!range){ alert('เลือกช่วงเวลาก่อน'); return; }
+  const rows = allData.filter(r=>r.date>=range.start && r.date<=range.end).sort((a,b)=>a.date.localeCompare(b.date));
+  if(!rows.length){ alert('ไม่มีข้อมูลในช่วงเวลานี้'); return; }
+  const header = ['วันที่','ประเภท','หมวดหมู่','รายละเอียด','จำนวนเงิน','ต้นทุน','จำนวนชิ้น'];
+  const esc = v => `"${String(v??'').replace(/"/g,'""')}"`;
+  const csvLines = [header.map(esc).join(',')];
+  rows.forEach(r=>{
+    csvLines.push([r.date, r.type==='income'?'รายรับ':'รายจ่าย', r.category, r.description, r.amount, r.cost||0, r.qty||1].map(esc).join(','));
+  });
+  const csvContent = '\uFEFF' + csvLines.join('\r\n');
+  const blob = new Blob([csvContent], { type:'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `report-${reportPeriodType}-${range.start}_${range.end}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function shareReport(){
+  const range = computeReportRange();
+  if(!range){ alert('เลือกช่วงเวลาก่อน'); return; }
+  const rows = allData.filter(r=>r.date>=range.start && r.date<=range.end);
+  const income = rows.filter(r=>r.type==='income').reduce((s,r)=>s+r.amount,0);
+  const expense = rows.filter(r=>r.type==='expense').reduce((s,r)=>s+r.amount,0);
+  const shopName = localStorage.getItem('shop_name') || 'สรุปยอดขาย';
+  const text = `${shopName}\nช่วง ${range.start} ถึง ${range.end}\n\nรายรับ: ${baht(income)}\nรายจ่าย: ${baht(expense)}\nคงเหลือสุทธิ: ${baht(income-expense)}`;
+
+  if(navigator.share){
+    navigator.share({ title:'รายงานยอดขาย', text }).catch(()=>{});
+  } else if(navigator.clipboard){
+    navigator.clipboard.writeText(text).then(()=>{
+      alert('คัดลอกสรุปรายงานแล้ว วางเพื่อแชร์ได้เลยครับ');
+    }).catch(()=>{
+      alert(text);
+    });
+  } else {
+    alert(text);
+  }
+}
+
 function renderTable(rows){
   const body = document.getElementById('ledgerBody');
   const empty = document.getElementById('ledgerEmpty');
@@ -1449,6 +1919,175 @@ function renderTable(rows){
       </td>
     </tr>
   `;}).join('');
+}
+
+/* ===== Products (สินค้า) ===== */
+function renderProducts(){
+  const list = document.getElementById('productList');
+  const empty = document.getElementById('productListEmpty');
+  const banner = document.getElementById('lowStockBanner');
+
+  const lowStockItems = allProducts.filter(p => p.lowStockThreshold > 0 && p.stock <= p.lowStockThreshold);
+  if(lowStockItems.length){
+    banner.style.display = 'block';
+    banner.textContent = `⚠️ สินค้าใกล้หมด ${lowStockItems.length} รายการ: ` + lowStockItems.map(p=>p.name).join(', ');
+  } else {
+    banner.style.display = 'none';
+  }
+
+  if(!allProducts.length){
+    list.innerHTML = '';
+    empty.style.display = 'block';
+    return;
+  }
+  empty.style.display = 'none';
+
+  const sorted = [...allProducts].sort((a,b)=>a.name.localeCompare(b.name,'th'));
+  list.innerHTML = sorted.map(p=>{
+    const margin = p.sellPrice - p.cost;
+    let badgeClass = 'ok', badgeText = `คงเหลือ ${p.stock}`;
+    if(p.stock <= 0){ badgeClass = 'out'; badgeText = 'หมดสต๊อก'; }
+    else if(p.lowStockThreshold > 0 && p.stock <= p.lowStockThreshold){ badgeClass = 'low'; badgeText = `เหลือน้อย (${p.stock})`; }
+    return `
+    <div class="product-card">
+      <div class="product-top">
+        <div class="product-name">${escapeHtml(p.name)}</div>
+        <div class="product-stock-badge ${badgeClass}">${badgeText}</div>
+      </div>
+      <div class="product-meta">
+        <span>ราคาขาย <b>${baht(p.sellPrice)}</b></span>
+        <span>ต้นทุน <b>${baht(p.cost)}</b></span>
+        <span>กำไร/ชิ้น <b style="color:var(--sage);">${baht(margin)}</b></span>
+      </div>
+      <div class="product-actions">
+        <button class="btn-sell" onclick="openSellModal(${p.rowIndex})" ${p.stock<=0?'disabled style="opacity:.5;"':''}>🛒 ขาย</button>
+        <button class="btn-edit-product" onclick="openProductModal(${p.rowIndex})">✎ แก้ไข</button>
+        <button class="btn-del-product" onclick="deleteProduct(${p.rowIndex})">✕</button>
+      </div>
+    </div>
+  `;}).join('');
+}
+
+function openProductModal(rowIndex){
+  editingProductRow = rowIndex || null;
+  const statusEl = document.getElementById('productModalStatus');
+  statusEl.className = 'status-msg';
+  if(rowIndex){
+    const p = allProducts.find(x=>x.rowIndex===rowIndex);
+    document.getElementById('productModalTitle').textContent = 'แก้ไขสินค้า';
+    document.getElementById('pName').value = p.name;
+    document.getElementById('pSellPrice').value = p.sellPrice;
+    document.getElementById('pCost').value = p.cost;
+    document.getElementById('pStock').value = p.stock;
+    document.getElementById('pLowStock').value = p.lowStockThreshold || '';
+  } else {
+    document.getElementById('productModalTitle').textContent = 'เพิ่มสินค้า';
+    document.getElementById('pName').value = '';
+    document.getElementById('pSellPrice').value = '';
+    document.getElementById('pCost').value = '';
+    document.getElementById('pStock').value = '';
+    document.getElementById('pLowStock').value = '';
+  }
+  document.getElementById('productModalBg').classList.add('show');
+}
+function closeProductModal(){
+  document.getElementById('productModalBg').classList.remove('show');
+}
+
+async function saveProduct(){
+  const name = document.getElementById('pName').value.trim();
+  const sellPrice = parseFloat(document.getElementById('pSellPrice').value) || 0;
+  const cost = parseFloat(document.getElementById('pCost').value) || 0;
+  const stock = parseFloat(document.getElementById('pStock').value) || 0;
+  const lowStockThreshold = parseFloat(document.getElementById('pLowStock').value) || 0;
+  const statusEl = document.getElementById('productModalStatus');
+
+  if(!name){
+    statusEl.textContent = 'กรอกชื่อสินค้า';
+    statusEl.className = 'status-msg show err';
+    return;
+  }
+  try{
+    const payload = editingProductRow
+      ? { action:'editProduct', rowIndex:editingProductRow, name, sellPrice, cost, stock, lowStockThreshold }
+      : { action:'addProduct', name, sellPrice, cost, stock, lowStockThreshold };
+    const res = await fetch(WEBAPP_URL, {
+      method:'POST', headers:{ 'Content-Type':'text/plain;charset=utf-8' }, body: JSON.stringify(payload)
+    });
+    const json = await res.json();
+    if(!json.success) throw new Error(json.error || 'บันทึกไม่สำเร็จ');
+    closeProductModal();
+    await loadData();
+  }catch(e){
+    statusEl.textContent = 'เกิดข้อผิดพลาด: ' + e.message;
+    statusEl.className = 'status-msg show err';
+  }
+}
+
+async function deleteProduct(rowIndex){
+  if(!confirm('ลบสินค้านี้ใช่หรือไม่? (ไม่กระทบรายการที่ขายไปแล้ว)')) return;
+  try{
+    const res = await fetch(WEBAPP_URL, {
+      method:'POST', headers:{ 'Content-Type':'text/plain;charset=utf-8' },
+      body: JSON.stringify({ action:'deleteProduct', rowIndex })
+    });
+    const json = await res.json();
+    if(!json.success) throw new Error(json.error || 'ลบไม่สำเร็จ');
+    await loadData();
+  }catch(e){
+    alert('ลบไม่สำเร็จ: ' + e.message);
+  }
+}
+
+function openSellModal(rowIndex){
+  sellingProduct = allProducts.find(p=>p.rowIndex===rowIndex);
+  if(!sellingProduct) return;
+  document.getElementById('sellProductName').textContent = sellingProduct.name;
+  document.getElementById('sellQty').value = 1;
+  document.getElementById('sellQty').max = sellingProduct.stock;
+  document.getElementById('sellModalStatus').className = 'status-msg';
+  updateSellTotal();
+  document.getElementById('sellModalBg').classList.add('show');
+}
+function closeSellModal(){
+  document.getElementById('sellModalBg').classList.remove('show');
+  sellingProduct = null;
+}
+function adjustSellQty(delta){
+  const input = document.getElementById('sellQty');
+  let val = (parseInt(input.value) || 1) + delta;
+  if(val < 1) val = 1;
+  if(sellingProduct && val > sellingProduct.stock) val = sellingProduct.stock;
+  input.value = val;
+  updateSellTotal();
+}
+function updateSellTotal(){
+  if(!sellingProduct) return;
+  const qty = parseInt(document.getElementById('sellQty').value) || 1;
+  document.getElementById('sellTotalText').textContent = 'รวม ' + baht(sellingProduct.sellPrice * qty);
+}
+async function confirmSell(){
+  if(!sellingProduct) return;
+  const qty = parseInt(document.getElementById('sellQty').value) || 1;
+  const statusEl = document.getElementById('sellModalStatus');
+  if(qty > sellingProduct.stock){
+    statusEl.textContent = 'จำนวนที่ขายมากกว่าสต๊อกที่มี';
+    statusEl.className = 'status-msg show err';
+    return;
+  }
+  try{
+    const res = await fetch(WEBAPP_URL, {
+      method:'POST', headers:{ 'Content-Type':'text/plain;charset=utf-8' },
+      body: JSON.stringify({ action:'sellProduct', rowIndex:sellingProduct.rowIndex, qty, date:new Date().toISOString().slice(0,10) })
+    });
+    const json = await res.json();
+    if(!json.success) throw new Error(json.error || 'บันทึกการขายไม่สำเร็จ');
+    closeSellModal();
+    await loadData();
+  }catch(e){
+    statusEl.textContent = 'เกิดข้อผิดพลาด: ' + e.message;
+    statusEl.className = 'status-msg show err';
+  }
 }
 
 function escapeHtml(s){
