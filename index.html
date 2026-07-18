@@ -80,22 +80,29 @@
   .bottom-nav{
     position:fixed; left:0; right:0; bottom:0; z-index:40;
     display:flex; background:var(--card-bg); border-top:3px solid var(--ink);
-    padding:6px 4px calc(6px + env(safe-area-inset-bottom));
+    padding:8px 4px calc(6px + env(safe-area-inset-bottom));
     box-shadow:0 -4px 0 rgba(0,0,0,0.04);
   }
   .nav-btn{
-    flex:1; display:flex; flex-direction:column; align-items:center; gap:2px;
-    background:none; border:none; cursor:pointer; padding:6px 2px; border-radius:10px;
-    font-family:'Kanit'; font-weight:700; font-size:10px; color:var(--ink-soft); opacity:.55;
+    flex:1; display:flex; flex-direction:column; align-items:center; gap:3px;
+    background:none; border:none; cursor:pointer; padding:2px 2px 4px; border-radius:10px;
+    font-family:'Kanit'; font-weight:700; font-size:10px; color:var(--ink-soft); opacity:.75;
   }
-  .nav-btn .nav-icon{font-size:20px; line-height:1;}
+  .nav-icon-badge{
+    width:34px; height:34px; border-radius:10px; border:2.5px solid var(--ink);
+    display:flex; align-items:center; justify-content:center; font-size:16px;
+    background:var(--paper-2); transition:.12s;
+  }
   .nav-btn.active{opacity:1; color:var(--ink);}
-  .nav-btn.active .nav-icon{transform:scale(1.15);}
-  .nav-btn:nth-child(1).active{color:var(--sage);}
-  .nav-btn:nth-child(2).active{color:var(--red);}
-  .nav-btn:nth-child(3).active{color:var(--gold-dark, #B8930A);}
-  .nav-btn:nth-child(4).active{color:var(--sage);}
-  .nav-btn:nth-child(5).active{color:var(--red);}
+  .nav-btn.active .nav-icon-badge{
+    box-shadow:2.5px 2.5px 0 var(--ink);
+    transform:translate(-1px,-1px);
+  }
+  .nav-btn:nth-child(1).active .nav-icon-badge{background:var(--sage);}
+  .nav-btn:nth-child(2).active .nav-icon-badge{background:var(--red);}
+  .nav-btn:nth-child(3).active .nav-icon-badge{background:var(--gold);}
+  .nav-btn:nth-child(4).active .nav-icon-badge{background:var(--sage);}
+  .nav-btn:nth-child(5).active .nav-icon-badge{background:var(--red);}
 
   .fab{
     position:fixed; right:18px; bottom:76px; z-index:41;
@@ -197,7 +204,7 @@
     .stat-card{padding:10px 6px;}
     .stat-card .stat-value{font-size:14px;}
     .nav-btn{font-size:9px;}
-    .nav-btn .nav-icon{font-size:18px;}
+    .nav-icon-badge{width:30px;height:30px;font-size:14px;border-width:2px;}
   }
 
   /* ===== Receipt hero ===== */
@@ -309,7 +316,7 @@
   .empty-hero button:hover{transform:translate(2px,2px);box-shadow:2px 2px 0 var(--ink);}
 
   .chart-empty{color:var(--ink-soft);opacity:.6;font-size:13px;text-align:center;padding:40px 0;font-weight:600;}
-  ::placeholder{color:#b7b0a0;}
+  ::placeholder{color:var(--ink-soft);opacity:.45;}
 
   /* ===== Search/filter bar ===== */
   .ledger-tools{display:flex;gap:8px;flex-wrap:wrap;padding:0 22px 16px;}
@@ -488,7 +495,7 @@
 
   <div id="noUrlHero" class="empty-hero" style="display:none;">
     <h2>ยังไม่ได้เชื่อมต่อ Google Sheet</h2>
-    <p style="color:#8b8a7d;max-width:420px;margin:8px auto 0;">
+    <p style="color:var(--ink-soft);opacity:.65;max-width:420px;margin:8px auto 0;">
       ไปที่แท็บ ⚙️ ตั้งค่า แล้ววาง Web App URL จาก Google Apps Script<br>
       (ดูวิธีตั้งค่าในไฟล์ AppsScript-Backend.gs.txt ที่แนบมาด้วย)
     </p>
@@ -561,7 +568,7 @@
             <select class="month-select" id="monthFilter"></select>
             <div class="range-inputs" id="rangeInputs" style="display:none;">
               <input type="date" id="rangeStart">
-              <span style="color:#a39d88;font-size:12px;">ถึง</span>
+              <span style="color:var(--ink-soft);opacity:.6;font-size:12px;">ถึง</span>
               <input type="date" id="rangeEnd">
             </div>
           </div>
@@ -694,7 +701,7 @@
         </div>
         <div class="range-inputs" id="ledgerRangeInputs" style="display:none;padding:0 22px 14px;">
           <input type="date" id="ledgerRangeStart" onchange="renderLedger()">
-          <span style="color:#a39d88;font-size:12px;">ถึง</span>
+          <span style="color:var(--ink-soft);opacity:.6;font-size:12px;">ถึง</span>
           <input type="date" id="ledgerRangeEnd" onchange="renderLedger()">
         </div>
         <table>
@@ -810,6 +817,19 @@
       </div>
 
       <div class="card" style="margin-bottom:20px;">
+        <h3>หมวดหมู่รายรับ / รายจ่าย <span class="eyebrow">CATEGORIES</span></h3>
+        <div class="period-toggle" style="margin-bottom:12px;">
+          <button id="catTabIncome" class="active" onclick="switchCatTab('income')">หมวดรายรับ</button>
+          <button id="catTabExpense" onclick="switchCatTab('expense')">หมวดรายจ่าย</button>
+        </div>
+        <div id="catManageList" style="margin-bottom:12px;"></div>
+        <div class="row2" style="grid-template-columns:1fr auto;gap:8px;">
+          <input type="text" id="newCatInput" placeholder="ชื่อหมวดหมู่ใหม่" style="padding:9px 11px;border:2.5px solid var(--ink);border-radius:7px;font-family:'Kanit';font-size:14px;background:var(--paper);color:var(--charcoal);">
+          <button class="submit-btn" style="width:auto;margin:0;padding:9px 16px;" onclick="addCustomCat()">+ เพิ่ม</button>
+        </div>
+      </div>
+
+      <div class="card" style="margin-bottom:20px;">
         <h3>การเชื่อมต่อ & เอกสาร <span class="eyebrow">DATA</span></h3>
         <div class="settings-item">
           <div><div class="s-label">เชื่อมต่อ Google Sheet</div><div class="s-sub">แก้ไข Web App URL</div></div>
@@ -853,19 +873,19 @@
 
   <div class="bottom-nav" id="bottomNav">
     <button class="nav-btn active" data-tab="dashboard" onclick="switchPage('dashboard')">
-      <span class="nav-icon">🏠</span><span>หน้าหลัก</span>
+      <span class="nav-icon-badge">🏠</span><span>หน้าหลัก</span>
     </button>
     <button class="nav-btn" data-tab="ledger" onclick="switchPage('ledger')">
-      <span class="nav-icon">💰</span><span>รายการ</span>
+      <span class="nav-icon-badge">💰</span><span>รายการ</span>
     </button>
     <button class="nav-btn" data-tab="products" onclick="switchPage('products')">
-      <span class="nav-icon">📦</span><span>สินค้า</span>
+      <span class="nav-icon-badge">📦</span><span>สินค้า</span>
     </button>
     <button class="nav-btn" data-tab="reports" onclick="switchPage('reports')">
-      <span class="nav-icon">📊</span><span>รายงาน</span>
+      <span class="nav-icon-badge">📊</span><span>รายงาน</span>
     </button>
     <button class="nav-btn" data-tab="settings" onclick="switchPage('settings')">
-      <span class="nav-icon">⚙️</span><span>ตั้งค่า</span>
+      <span class="nav-icon-badge">⚙️</span><span>ตั้งค่า</span>
     </button>
   </div>
 
@@ -988,7 +1008,29 @@ const defaultCats = {
   expense: ['ค่าวัตถุดิบ','ค่าขนส่ง','ค่าเช่า','ค่าแพ็กเกจจิ้ง','อื่นๆ']
 };
 
+function getCustomCats(type){
+  try{
+    return JSON.parse(localStorage.getItem('custom_cats_'+type) || '[]');
+  }catch(e){ return []; }
+}
+function setCustomCats(type, arr){
+  try{ localStorage.setItem('custom_cats_'+type, JSON.stringify(arr)); }catch(e){}
+}
+function getAllCats(type){
+  return [...defaultCats[type], ...getCustomCats(type)];
+}
+
 let historyMode = 7;
+
+function getChartTextColor(){
+  return document.documentElement.getAttribute('data-theme') === 'dark' ? '#FFF8E7' : '#111111';
+}
+function getChartGridColor(){
+  return document.documentElement.getAttribute('data-theme') === 'dark' ? '#3A3245' : '#FFE9A3';
+}
+function getChartBorderColor(){
+  return document.documentElement.getAttribute('data-theme') === 'dark' ? '#FFD400' : '#111111';
+}
 let historyChart;
 let ledgerDateMode = 'all';
 let pendingReceiptDataUrl = null;
@@ -1124,6 +1166,17 @@ function toggleTheme(){
   applyTheme(next);
   if(next === 'light') document.documentElement.removeAttribute('data-theme');
   try{ localStorage.setItem('theme', next); }catch(e){}
+  refreshChartsForTheme();
+}
+
+function refreshChartsForTheme(){
+  // รีเฟรชกราฟที่กำลังแสดงอยู่ให้สีตัวอักษร/เส้นตารางเปลี่ยนตามธีมทันที
+  if(allData.length || allProducts.length){
+    render();
+  }
+  if(document.getElementById('page-reports') && document.getElementById('page-reports').style.display !== 'none'){
+    renderReport();
+  }
 }
 
 function setPeriodMode(mode){
@@ -1398,7 +1451,7 @@ function setType(t){
 function updateCatList(){
   const list = document.getElementById('catList');
   list.innerHTML = '';
-  defaultCats[currentType].forEach(c=>{
+  getAllCats(currentType).forEach(c=>{
     const opt = document.createElement('option');
     opt.value = c;
     list.appendChild(opt);
@@ -1408,7 +1461,7 @@ function updateCatList(){
 async function loadData(){
   if(!WEBAPP_URL) return;
   const ledgerBody = document.getElementById('ledgerBody');
-  ledgerBody.innerHTML = '<tr><td colspan="7" style="padding:20px 22px;color:#a39d88;">กำลังโหลดข้อมูล...</td></tr>';
+  ledgerBody.innerHTML = '<tr><td colspan="7" style="padding:20px 22px;color:var(--ink-soft);opacity:.6;">กำลังโหลดข้อมูล...</td></tr>';
   try{
     const res = await fetch(WEBAPP_URL);
     const json = await res.json();
@@ -1575,12 +1628,12 @@ function renderHistoryChart(){
   if(historyChart) historyChart.destroy();
   historyChart = new Chart(canvas, {
     type:'bar',
-    data:{ labels, datasets:[{ label:'ยอดขาย', data, backgroundColor:'#00AEEF', borderColor:'#111111', borderWidth:2, borderRadius:4 }] },
+    data:{ labels, datasets:[{ label:'ยอดขาย', data, backgroundColor:'#00AEEF', borderColor:getChartBorderColor(), borderWidth:2, borderRadius:4 }] },
     options:{
       plugins:{ legend:{ display:false } },
       scales:{
-        x:{ ticks:{ font:{family:"'Kanit'", size:historyMode===30?8:11}, color:'#111111' }, grid:{ display:false } },
-        y:{ ticks:{ font:{family:"'Kanit'", size:10}, color:'#111111' }, grid:{ color:'#FFE9A3' } }
+        x:{ ticks:{ font:{family:"'Kanit'", size:historyMode===30?8:11}, color:getChartTextColor() }, grid:{ display:false } },
+        y:{ ticks:{ font:{family:"'Kanit'", size:10}, color:getChartTextColor() }, grid:{ color:getChartGridColor() } }
       }
     }
   });
@@ -1708,12 +1761,12 @@ function renderReportSalesChart(aggregated){
   reportSalesChartInst = new Chart(canvas, {
     type:'bar',
     data:{ labels:aggregated.map(b=>b.label), datasets:[{ label:'ยอดขาย', data:aggregated.map(b=>b.income),
-      backgroundColor:'#00AEEF', borderColor:'#111111', borderWidth:2, borderRadius:4 }] },
+      backgroundColor:'#00AEEF', borderColor:getChartBorderColor(), borderWidth:2, borderRadius:4 }] },
     options:{
       plugins:{ legend:{ display:false } },
       scales:{
-        x:{ ticks:{ font:{family:"'Kanit'", size:aggregated.length>15?8:11}, color:'#111111' }, grid:{ display:false } },
-        y:{ ticks:{ font:{family:"'Kanit'", size:10}, color:'#111111' }, grid:{ color:'#FFE9A3' } }
+        x:{ ticks:{ font:{family:"'Kanit'", size:aggregated.length>15?8:11}, color:getChartTextColor() }, grid:{ display:false } },
+        y:{ ticks:{ font:{family:"'Kanit'", size:10}, color:getChartTextColor() }, grid:{ color:getChartGridColor() } }
       }
     }
   });
@@ -1735,15 +1788,15 @@ function renderReportIEChart(aggregated){
     data:{
       labels:aggregated.map(b=>b.label),
       datasets:[
-        { label:'รายรับ', data:aggregated.map(b=>b.income), backgroundColor:'#00AEEF', borderColor:'#111111', borderWidth:2, borderRadius:4 },
-        { label:'รายจ่าย', data:aggregated.map(b=>b.expense), backgroundColor:'#FF2E63', borderColor:'#111111', borderWidth:2, borderRadius:4 }
+        { label:'รายรับ', data:aggregated.map(b=>b.income), backgroundColor:'#00AEEF', borderColor:getChartBorderColor(), borderWidth:2, borderRadius:4 },
+        { label:'รายจ่าย', data:aggregated.map(b=>b.expense), backgroundColor:'#FF2E63', borderColor:getChartBorderColor(), borderWidth:2, borderRadius:4 }
       ]
     },
     options:{
-      plugins:{ legend:{ position:'bottom', labels:{ font:{family:"'Kanit'", size:12}, color:'#111111' } } },
+      plugins:{ legend:{ position:'bottom', labels:{ font:{family:"'Kanit'", size:12}, color:getChartTextColor() } } },
       scales:{
-        x:{ ticks:{ font:{family:"'Kanit'", size:aggregated.length>15?8:11}, color:'#111111' }, grid:{ display:false } },
-        y:{ ticks:{ font:{family:"'Kanit'", size:10}, color:'#111111' }, grid:{ color:'#FFE9A3' } }
+        x:{ ticks:{ font:{family:"'Kanit'", size:aggregated.length>15?8:11}, color:getChartTextColor() }, grid:{ display:false } },
+        y:{ ticks:{ font:{family:"'Kanit'", size:10}, color:getChartTextColor() }, grid:{ color:getChartGridColor() } }
       }
     }
   });
@@ -1767,9 +1820,9 @@ function renderReportCatChart(rows){
   if(reportCatChartInst) reportCatChartInst.destroy();
   reportCatChartInst = new Chart(canvas, {
     type:'doughnut',
-    data:{ labels, datasets:[{ data:Object.values(byCat), backgroundColor:palette, borderWidth:2, borderColor:'#111111' }] },
+    data:{ labels, datasets:[{ data:Object.values(byCat), backgroundColor:palette, borderWidth:2, borderColor:getChartBorderColor() }] },
     options:{
-      plugins:{ legend:{ position:'bottom', labels:{ font:{family:"'Kanit'", size:12}, padding:14, color:'#111111' } } },
+      plugins:{ legend:{ position:'bottom', labels:{ font:{family:"'Kanit'", size:12}, padding:14, color:getChartTextColor() } } },
       cutout:'62%'
     }
   });
@@ -1901,15 +1954,15 @@ function renderTable(rows){
   empty.style.display = 'none';
   body.innerHTML = rows.map(r=>{
     const profit = r.type==='income' ? (r.amount - (r.cost||0)) : null;
-    const profitCell = profit===null ? '<span style="color:#c4bda4;">—</span>' : baht(profit);
+    const profitCell = profit===null ? '<span style="color:var(--ink);opacity:.3;">—</span>' : baht(profit);
     const receiptCell = r.receiptUrl
       ? `<a href="${r.receiptUrl}" target="_blank" rel="noopener" title="ดูรูปสลิป" style="font-size:16px;text-decoration:none;">🧾</a>`
-      : '<span style="color:#c4bda4;">—</span>';
+      : '<span style="color:var(--ink);opacity:.3;">—</span>';
     return `
     <tr>
-      <td data-label="วันที่" style="font-family:'Kanit',monospace;font-size:12.5px;color:#111111;">${r.date}</td>
+      <td data-label="วันที่" style="font-family:'Kanit',monospace;font-size:12.5px;color:var(--ink);opacity:.75;">${r.date}</td>
       <td data-label="หมวดหมู่"><span class="cat-pill">${escapeHtml(r.category||'-')}</span></td>
-      <td data-label="รายละเอียด" style="color:#5c5a4d;">${escapeHtml(r.description||'')}</td>
+      <td data-label="รายละเอียด" style="color:var(--ink);opacity:.72;">${escapeHtml(r.description||'')}</td>
       <td data-label="จำนวนเงิน" class="amt ${r.type}">${r.type==='expense'?'-':'+'}${baht(r.amount)}</td>
       <td data-label="กำไร" class="profit-cell">${profitCell}</td>
       <td data-label="สลิป">${receiptCell}</td>
@@ -2112,9 +2165,9 @@ function renderCatChart(rows){
   if(catChart) catChart.destroy();
   catChart = new Chart(canvas, {
     type:'doughnut',
-    data:{ labels, datasets:[{ data:Object.values(byCat), backgroundColor:palette, borderWidth:2, borderColor:'#111111' }] },
+    data:{ labels, datasets:[{ data:Object.values(byCat), backgroundColor:palette, borderWidth:2, borderColor:getChartBorderColor() }] },
     options:{
-      plugins:{ legend:{ position:'bottom', labels:{ font:{family:"'Kanit'", size:12}, padding:14, color:'#111111' } } },
+      plugins:{ legend:{ position:'bottom', labels:{ font:{family:"'Kanit'", size:12}, padding:14, color:getChartTextColor() } } },
       cutout:'62%'
     }
   });
@@ -2146,10 +2199,10 @@ function renderTrendChart(rows){
       ]
     },
     options:{
-      plugins:{ legend:{ position:'bottom', labels:{ font:{family:"'Kanit'", size:12}, color:'#111111' } } },
+      plugins:{ legend:{ position:'bottom', labels:{ font:{family:"'Kanit'", size:12}, color:getChartTextColor() } } },
       scales:{
-        x:{ ticks:{ font:{family:"'Kanit'", size:10}, color:'#111111' }, grid:{ display:false } },
-        y:{ ticks:{ font:{family:"'Kanit'", size:10}, color:'#111111' }, grid:{ color:'#FFE9A3' } }
+        x:{ ticks:{ font:{family:"'Kanit'", size:10}, color:getChartTextColor() }, grid:{ display:false } },
+        y:{ ticks:{ font:{family:"'Kanit'", size:10}, color:getChartTextColor() }, grid:{ color:getChartGridColor() } }
       }
     }
   });
