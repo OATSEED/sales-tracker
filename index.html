@@ -1730,6 +1730,31 @@ function processPinEntry(){
   }
 }
 
+function initStatusAutoHide(){
+  const HIDE_DELAY_OK = 2800;
+  const HIDE_DELAY_ERR = 4500;
+
+  const observer = new MutationObserver(mutations=>{
+    mutations.forEach(m=>{
+      const el = m.target;
+      if(!el.classList || !el.classList.contains('status-msg')) return;
+      if(el.classList.contains('show')){
+        clearTimeout(el._hideTimer);
+        const delay = el.classList.contains('err') ? HIDE_DELAY_ERR : HIDE_DELAY_OK;
+        el._hideTimer = setTimeout(()=>{
+          el.classList.remove('show');
+        }, delay);
+      } else {
+        clearTimeout(el._hideTimer);
+      }
+    });
+  });
+
+  document.querySelectorAll('.status-msg').forEach(el=>{
+    observer.observe(el, { attributes:true, attributeFilter:['class'] });
+  });
+}
+
 function bootApp(){
   const hasPin = localStorage.getItem('app_pin');
   if(hasPin){
@@ -3135,6 +3160,7 @@ async function deleteRow(rowIndex){
   }
 }
 
+initStatusAutoHide();
 bootApp();
 </script>
 </body>
